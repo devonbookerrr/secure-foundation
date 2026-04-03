@@ -1,3 +1,2 @@
-# Secure Foundation
-Terraform-First AWS Security Infrastructure
-A production-grade AWS foundation provisioned entirely with Terraform. No console clicking. No one-off scripts. Every resource defined, versioned, tested, and documented.
+# Secure Foundation - Terraform-First AWS Security Infrastructure
+I've been talking to current Cloud Security Engineers to get a better idea of what companies actually are looking for. Most of them say the same thing: learn to build infrastructure and become so good at it that you incorporate security into it. In this current economy, cloud and AI are super hot. Every ambitious company out there seems to be making advancements in both of these fields. And many people like me want to work in this ever-changing field. But the reality is, understanding the foundation needed for a good cloud and AI infrastructure is super important.
