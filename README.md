@@ -62,6 +62,12 @@ Created a VPC with two subnets - `10.0.1.0/24` for public and `10.0.2.0/24` for 
 ## Security Decisions
 
 *Documented as I go - every decision has a reason.*
+| Decision | Why |
+| --- | --- |
+| S3 backend with DynamoDB locking | Prevents state corruption from concurrent runs and enables team collaboration |
+| State files in .gitignore | State can contain plaintext secrets and full infrastructure mapping |
+| All resources tagged | Consistent tagging enables cost tracking, ownership, and automated policy enforcement |
+| *More to come as the project progresses...* |  |
 
 ## Terraform Fundamentals + Environment
 I started by installing Terraform, AWS CLI, TFlint, and terraform-docs into my WSL2. I use a Windows 11 machine. But I know how important learning Linux is if I'm going to be excellent in cloud. So I downloaded something called WSL2. It's basically a Linux plugin that runs on top of your PowerShell instance. It acts and feels like an Ubuntu machine, without having to spin up a whole VM. Super useful. More info can be found [here](https://learn.microsoft.com/en-us/windows/wsl/install). Installing the essential tools mentioned was super easy. I just googled "install terraform on WSL2" and it gave me a command I can just run in my terminal. I did that for all 4 tools. 
