@@ -73,7 +73,3 @@ Created a VPC with two subnets - `10.0.1.0/24` for public and `10.0.2.0/24` for 
 | CI/CD pipeline for ```terraform plan``` on PRs | | 
 | *More to come as the project progresses...* |  |
 
-
-The next thing I did was create a VPC with 2 subnets (private and public). You can find the config [here](main.tf). I made a super basic VPC, attached it to the "dev" environment and associated the "Terraform" tag with it. And for my subnets, I 10.0.1.0/24 for public and 10.0.2.0/24 for private. Once everything looked good, it was time to use Terraform to automate infrastructure set up and tear down.
-
-I used the commands ```terraform init```, ```terraform plan```, ```terraform apply```, and ```terraform destroy``` repeatedly to understand what was happening and why.
