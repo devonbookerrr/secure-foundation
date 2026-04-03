@@ -1,11 +1,12 @@
 # Secure Foundation - Terraform-First AWS Security Infrastructure
-I've been talking to current Cloud Security Engineers to get a better idea of what companies actually are looking for. Most of them say the same thing: **learn to build infrastructure and become so good at it that you incorporate security into it.** 
+I've been talking to current Cloud Security Engineers to get a better idea of what companies are actually looking for. Most of them say the same thing: **learn to build infrastructure and become so good at it that you incorporate security into it.**
 
-In this current economy, cloud and AI are super hot. Every ambitious company out there seems to be making advancements in both of these fields. And many people (like me) want to work in this ever-changing field. But the reality is, understanding the foundation needed for a good cloud and AI infrastructure is super important.
+I want to be excellent in my job as a Cloud Security Engineer. In order to do so, I need to understand secure infrastructure at a foundational level. That's the motivation behind this project. I want to show that I'm willing to put in the work to learn the hard skills - Terraform, tflint, Golang, automated testing - and go a layer deeper every time. Because that's what differentiates average engineers from excellent ones. 
 
-**I want to be excellent in my job as a Cloud Security Engineer.** In order to do so, I need to understand the foundations (secure infrsastructure) well. That's my motivation behind this project. I want to be able to show that I'm willing to put in the work to learn the hard skills like Terraform, TFlint, and Golang. I'm willing to go a layer deeper every time. Because this is what differentiates average engineers from excellent engineers. 
+## What This Builds
 
-## Project Overview
+A production-grade AWS foundation provisioned entirely with Terraform. No console clicking. No one-off scripts. Every resource defined, versioned, tested, and documented.
+
 - VPC with public and private subnets across 2 AZs
 - NAT Gateway, Internet Gateway, route tables
 - Security groups with least-privilege rules
@@ -16,9 +17,30 @@ In this current economy, cloud and AI are super hot. Every ambitious company out
 - AWS Config with managed rules (CIS benchmark subset)
 - All resources tagged consistently
 
-**Tools:** Terraform, tflint, terraform-docs, Terratest (Go), AWS (VPC, IAM, S3, CloudTrail, GuardDuty, Config), Linux, Git
+**Tools:** Terraform, tflint, terraform-docs, Terratest (Go), AWS (VPC, IAM, S3, CloudTrail, GuardDuty, Config), Linux (WSL2), Git
 
 ---
+## Prerequisites
+- AWS account with IAM user/role that has admin access
+- Terraform >= 1.5.0
+- AWS CLI configured with credentials
+- tflint with the AWS ruleset
+- terraform-docs
+- Go (for Terratest)
+- WSL2 or Linux environment
+
+## How to Deploy
+
+1. Clone the repo
+2. Copy `backend.tf.example` to `backend.tf` and fill in your own S3 bucket and DynamoDB table names
+3. `terraform init`
+4. `terraform plan`
+5. `terraform apply`
+
+> **Note:** You need to manually create an S3 bucket (versioning + encryption enabled) and a DynamoDB table (partition key `LockID`, type String) before running `terraform init`. This is a one-time bootstrap - Terraform cannot create its own backend.
+
+
+
 ## Terraform Fundamentals + Environment
 I started by installing Terraform, AWS CLI, TFlint, and terraform-docs into my WSL2. I use a Windows 11 machine. But I know how important learning Linux is if I'm going to be excellent in cloud. So I downloaded something called WSL2. It's basically a Linux plugin that runs on top of your PowerShell instance. It acts and feels like an Ubuntu machine, without having to spin up a whole VM. Super useful. More info can be found [here](https://learn.microsoft.com/en-us/windows/wsl/install). Installing the essential tools mentioned was super easy. I just googled "install terraform on WSL2" and it gave me a command I can just run in my terminal. I did that for all 4 tools. 
 
