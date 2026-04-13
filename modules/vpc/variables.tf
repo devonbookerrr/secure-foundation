@@ -37,5 +37,18 @@ variable "project_name" {
 
 variable "environment" {
   type        = string
-  description = "Deployment environment (e.g. dev, prod)"
+  description = "Deployment environment"
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "environment must be one of: dev, staging, prod."
+  }
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags to apply to all resources. Must include 'Environment' and 'Owner'."
+  validation {
+    condition     = contains(keys(var.tags), "Environment") && contains(keys(var.tags), "Owner")
+    error_message = "tags must include 'Environment' and 'Owner' keys."
+  }
 }

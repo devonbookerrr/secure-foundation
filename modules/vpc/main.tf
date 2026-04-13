@@ -3,12 +3,12 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
-  tags = {
+  tags = merge(var.tags, {
     Name        = "${var.project_name}-vpc"
     Project     = var.project_name
     Environment = var.environment
     ManagedBy   = "terraform"
-  }
+  })
 }
 
 resource "aws_subnet" "public" {
@@ -17,12 +17,12 @@ resource "aws_subnet" "public" {
   availability_zone       = "${var.aws_region}a"
   map_public_ip_on_launch = true
 
-  tags = {
+  tags = merge(var.tags, {
     Name        = "${var.project_name}-public-subnet"
     Project     = var.project_name
     Environment = var.environment
     ManagedBy   = "terraform"
-  }
+  })
 }
 
 resource "aws_subnet" "private" {
@@ -30,10 +30,10 @@ resource "aws_subnet" "private" {
   cidr_block        = var.private_subnet_cidr
   availability_zone = "${var.aws_region}b"
 
-  tags = {
+  tags = merge(var.tags, {
     Name        = "${var.project_name}-private-subnet"
     Project     = var.project_name
     Environment = var.environment
     ManagedBy   = "terraform"
-  }
+  })
 }

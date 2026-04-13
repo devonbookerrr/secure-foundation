@@ -7,4 +7,5 @@ module "vpc" {
   aws_region          = var.aws_region
   project_name        = var.project_name
   environment         = var.environment
+  tags                = var.tags
 }
