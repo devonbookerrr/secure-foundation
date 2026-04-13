@@ -1,39 +1,10 @@
-resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_support   = true
-  enable_dns_hostnames = true
+module "vpc" {
+  source = "./modules/vpc"
 
-  tags = {
-    Name        = "${var.project_name}-vpc"
-    Project     = var.project_name
-    Environment = "dev"
-    ManagedBy   = "terraform"
-  }
-}
-
-resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = "${var.aws_region}a"
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name        = "${var.project_name}-public-subnet"
-    Project     = var.project_name
-    Environment = "dev"
-    ManagedBy   = "terraform"
-  }
-}
-
-resource "aws_subnet" "private" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = "${var.aws_region}b"
-
-  tags = {
-    Name        = "${var.project_name}-private-subnet"
-    Project     = var.project_name
-    Environment = "dev"
-    ManagedBy   = "terraform"
-  }
+  vpc_cidr            = var.vpc_cidr
+  public_subnet_cidr  = var.public_subnet_cidr
+  private_subnet_cidr = var.private_subnet_cidr
+  aws_region          = var.aws_region
+  project_name        = var.project_name
+  environment         = var.environment
 }
