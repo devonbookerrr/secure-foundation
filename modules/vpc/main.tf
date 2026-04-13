@@ -37,3 +37,155 @@ resource "aws_subnet" "private" {
     ManagedBy   = "terraform"
   })
 }
+
+# --- Internet Gateway ---
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(var.tags, {
+    Name        = "${var.project_name}-igw"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  })
+}
+
+# --- NAT Gateway ---
+
+resource "aws_eip" "nat" {
+  domain = "vpc"
+
+  tags = merge(var.tags, {
+    Name        = "${var.project_name}-nat-eip"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  })
+}
+
+resource "aws_nat_gateway" "main" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public.id
+
+  depends_on = [aws_internet_gateway.main]
+
+  tags = merge(var.tags, {
+    Name        = "${var.project_name}-nat"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  })
+}
+
+# --- Route Tables ---
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+
+  tags = merge(var.tags, {
+    Name        = "${var.project_name}-public-rt"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  })
+}
+
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main.id
+  }
+
+  tags = merge(var.tags, {
+    Name        = "${var.project_name}-private-rt"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  })
+}
+
+resource "aws_route_table_association" "private" {
+  subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.private.id
+}
+
+# --- Security Groups ---
+
+resource "aws_security_group" "public" {
+  name        = "${var.project_name}-public-sg"
+  description = "Allow inbound HTTP and HTTPS from the internet"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(var.tags, {
+    Name        = "${var.project_name}-public-sg"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  })
+}
+
+resource "aws_security_group" "private" {
+  name        = "${var.project_name}-private-sg"
+  description = "Allow inbound traffic only from within the VPC"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "All traffic from VPC"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.vpc_cidr]
+  }
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(var.tags, {
+    Name        = "${var.project_name}-private-sg"
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  })
+}
